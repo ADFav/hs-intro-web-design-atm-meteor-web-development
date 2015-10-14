@@ -1,9 +1,56 @@
 $(function(){
 
-  //start coding here...
+  var balance        =   0.0,
+      $amountInput   =   $('#amount'),
+      $balanceArea   =   $('#balance'),
+      $choiceSelect  =   $('#choice'),
+      $submitBtn     =   $('#submit'),
+      $atmForm       =   $('#atm');
 
-  $("#submit").click(function(e){
-    // we need this to prevent the form for resubmitting, specifically on the specrunner.html (we have our project's html in here so we don't have to include fixtures in the spec)
-    e.preventDefault();
-  })
+  function do_transaction(action) {
+
+    var amount = parseFloat($amountInput.val());
+
+    if (isNaN(amount) || amount === '') {
+      $balanceArea.text('Fool don\'t be playin!');
+    } 
+    else {
+      if(action === 'deposit') {
+        balance += amount;
+      } 
+      else if (action === 'withdrawal') {
+        balance -= amount;
+      }
+      $balanceArea.text('balance: $'+balance);
+    }
+  }
+
+  $atmForm.submit(function(event) {
+
+    var choice = $choiceSelect.val();
+
+    do_transaction(choice);
+
+    event.preventDefault();
+  });
+
+  ////////// Select Menu Aesthetics //////////
+
+  $amountInput.hide();
+  $submitBtn.hide();
+
+  $choiceSelect.change(function() {
+
+    var choice = $choiceSelect.val();
+
+    if (choice === 'deposit' || choice === 'withdrawal') {
+      $amountInput.show().val('');
+      $submitBtn.show();
+    } 
+    else {
+      $amountInput.hide().val('');
+      $submitBtn.hide();
+    }
+  });
+
 });
